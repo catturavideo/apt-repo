@@ -35,6 +35,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.util.FileUtils;
@@ -53,7 +54,12 @@ import org.m1theo.apt.repo.utils.Utils;
  * @since 0.1.0
  * 
  */
-@Mojo(name = "apt-repo", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(
+    name="apt-repo",
+    defaultPhase=LifecyclePhase.PACKAGE, 
+    requiresDependencyCollection=ResolutionScope.COMPILE_PLUS_RUNTIME,
+    requiresDependencyResolution= ResolutionScope.COMPILE_PLUS_RUNTIME
+)
 public class AptRepoMojo extends AbstractMojo {
   private static final String RELEASE = "Release";
   private static final String PACKAGES_GZ = "Packages.gz";
