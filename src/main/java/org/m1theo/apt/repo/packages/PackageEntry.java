@@ -27,6 +27,7 @@ public class PackageEntry {
   private String md5sum;
   private String sha1;
   private String sha256;
+  private String sha512;
   private String section;
   private String priority;
   private String description;
@@ -42,7 +43,7 @@ public class PackageEntry {
       buffer.append("Depends: " + depends + "\n");
     }
     buffer.append("Filename: " + filename + "\n" + "Size: " + size + "\n" + "MD5sum: " + md5sum
-        + "\n" + "SHA1: " + sha1 + "\n" + "SHA256: " + sha256 + "\n" + "Section: " + section + "\n"
+        + "\n" + "SHA1: " + sha1 + "\n" + "SHA256: " + sha256 + "\n" + "SHA512: " + sha512 + "\n" + "Section: " + section + "\n"
         + "Priority: " + priority + "\n" + "Description: " + description + "\n");
 
     return buffer.toString();
@@ -86,6 +87,14 @@ public class PackageEntry {
 
   public void setSha1(String sha1) {
     this.sha1 = sha1;
+  }
+
+  public String getSha512() {
+    return sha512;
+  }
+
+  public void setSha512(String sha512) {
+    this.sha512 = sha512;
   }
 
   public void setSha256(String sha256) {
