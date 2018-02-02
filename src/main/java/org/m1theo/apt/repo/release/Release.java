@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 /**
  * Copyright (c) 2010-2013, theo@m1theo.org.
  * 
@@ -21,6 +22,7 @@ import java.util.Date;
  */
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -33,7 +35,8 @@ import java.util.TimeZone;
 public class Release {
   String date;
   List<ReleaseInfo> infos = new ArrayList<ReleaseInfo>();
-
+  Map<String, String> fields = new LinkedHashMap<String, String>();
+  
   public Release() {
     SimpleDateFormat dateFormat =
         (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ENGLISH);
@@ -49,11 +52,22 @@ public class Release {
   public void addInfo(ReleaseInfo info) {
     infos.add(info);
   }
+  
+  public void addField(String key, String value) {
+    fields.put(key, value);
+  }
+  
+  public void addFields(Map<String, String> fields) {
+    fields.putAll(fields);
+  }
 
   @Override
   public String toString() {
     StringBuffer b = new StringBuffer();
     b.append("Date: " + date + "\n");
+    for (Map.Entry<String, String> entry : fields.entrySet()) {
+      b.append(String.format("%s: %s\n", entry.getKey(), entry.getValue()));
+    }
     b.append("MD5Sum:\n");
     for (ReleaseInfo info : infos) {
       b.append(String.format(" %s  %s %s\n", info.getMd5hash(), info.getSize(), info.getName()));

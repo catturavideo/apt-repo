@@ -39,6 +39,7 @@ import org.m1theo.apt.repo.utils.Utils;
 import java.io.*;
 import java.security.GeneralSecurityException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -147,6 +148,12 @@ public class AptRepoMojo extends AbstractMojo {
   @Parameter(defaultValue = "${reactorProjects}", required = true, readonly = true)
   private List<MavenProject> reactorProjects;
 
+  /**
+   * Extra fields to be added to Release file.
+   */
+  @Parameter(property="apt-repo.extraFields")
+  private java.util.Map<String, String> extraFields = Collections.EMPTY_MAP;
+  
   public List<MavenProject> getReactorProjects() {
     return reactorProjects;
   }
@@ -270,7 +277,8 @@ public class AptRepoMojo extends AbstractMojo {
     }
     try {
       Release release = new Release();
-
+      release.addFields(extraFields);
+      
       File packagesFile = new File(repoDir, PACKAGES);
       BufferedWriter packagesWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
           packagesFile)));
