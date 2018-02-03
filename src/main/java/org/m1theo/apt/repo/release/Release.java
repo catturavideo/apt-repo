@@ -57,8 +57,8 @@ public class Release {
     fields.put(key, value);
   }
   
-  public void addFields(Map<String, String> fields) {
-    fields.putAll(fields);
+  public void addFields(Map<String, String> newFields) {
+    fields.putAll(newFields);
   }
 
   @Override
