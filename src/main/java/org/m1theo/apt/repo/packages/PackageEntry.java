@@ -25,6 +25,11 @@ public class PackageEntry {
   private String recommends;
   private String conflicts;
   private String replaces;
+  private String suggests;
+  private String enhances;
+  private String breaks;
+  private String pre_depends;
+  private String provides;
   private String filename;
   private long size;
   private String md5sum;
@@ -53,6 +58,21 @@ public class PackageEntry {
     }
     if (replaces != null) {
       buffer.append("Replaces: " + replaces + "\n");
+    }
+    if (suggests != null) {
+      buffer.append("Suggests: " + suggests + "\n");
+    }
+    if (enhances != null) {
+      buffer.append("Enhances: " + enhances + "\n");
+    }
+    if (breaks != null) {
+      buffer.append("Breaks: " + breaks + "\n");
+    }
+    if (pre_depends != null) {
+      buffer.append("Pre-Depends: " + pre_depends + "\n");
+    }
+    if (provides != null) {
+      buffer.append("Provides: " + provides + "\n");
     }
     buffer.append("Filename: " + filename + "\n" + "Size: " + size + "\n" + "MD5sum: " + md5sum
         + "\n" + "SHA1: " + sha1 + "\n" + "SHA256: " + sha256 + "\n" + "SHA512: " + sha512 + "\n" + "Section: " + section + "\n"
@@ -96,7 +116,27 @@ public class PackageEntry {
   public void setReplaces(String replaces) {
     this.replaces = replaces;
   }
-
+  
+  public void setSuggests(String suggests) {
+    this.suggests = suggests;
+  }
+  
+  public void setEnhances(String enhances) {
+    this.enhances = enhances;
+  }
+  
+  public void setBreaks(String breaks) {
+    this.breaks = breaks;
+  }
+  
+  public void setPre_depends(String pre_depends) {
+    this.pre_depends = pre_depends;
+  }
+  
+  public void setProvides(String provides) {
+    this.provides = provides;
+  }
+  
   public void setFilename(String filename) {
     this.filename = filename;
   }

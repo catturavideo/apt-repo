@@ -96,6 +96,26 @@ public class ControlHandler {
     if (controlEntries.containsKey("Replaces")) {
       packageEntry.setReplaces(controlEntries.get("Replaces").toString());
     }
+
+    if (controlEntries.containsKey("Suggests")) {
+      packageEntry.setSuggests(controlEntries.get("Suggests").toString());
+    }
+    
+    if (controlEntries.containsKey("Enhances")) {
+      packageEntry.setEnhances(controlEntries.get("Enhances").toString());
+    }
+    
+    if (controlEntries.containsKey("Breaks")) {
+      packageEntry.setBreaks(controlEntries.get("Breaks").toString());
+    }
+    
+    if (controlEntries.containsKey("Pre-Depends")) {
+      packageEntry.setPre_depends(controlEntries.get("Pre-Depends").toString());
+    }
+    
+    if (controlEntries.containsKey("Provides")) {
+      packageEntry.setProvides(controlEntries.get("Provides").toString());
+    }
     
     if (controlEntries.containsKey("Section")) {
       packageEntry.setSection(controlEntries.get("Section").toString());
