@@ -22,6 +22,9 @@ public class PackageEntry {
   private String maintainer;
   private String installed_size;
   private String depends;
+  private String recommends;
+  private String conflicts;
+  private String replaces;
   private String filename;
   private long size;
   private String md5sum;
@@ -41,6 +44,15 @@ public class PackageEntry {
         + "Installed-Size: " + installed_size + "\n");
     if (depends != null) {
       buffer.append("Depends: " + depends + "\n");
+    }
+    if (recommends != null) {
+      buffer.append("Recommends: " + recommends + "\n");
+    }
+    if (conflicts != null) {
+      buffer.append("Conflicts: " + conflicts + "\n");
+    }
+    if (replaces != null) {
+      buffer.append("Replaces: " + replaces + "\n");
     }
     buffer.append("Filename: " + filename + "\n" + "Size: " + size + "\n" + "MD5sum: " + md5sum
         + "\n" + "SHA1: " + sha1 + "\n" + "SHA256: " + sha256 + "\n" + "SHA512: " + sha512 + "\n" + "Section: " + section + "\n"
@@ -71,6 +83,18 @@ public class PackageEntry {
 
   public void setDepends(String depends) {
     this.depends = depends;
+  }
+  
+  public void setRecommends(String recommends) {
+    this.recommends = recommends;
+  }
+  
+  public void setConflicts(String conflicts) {
+    this.conflicts = conflicts;
+  }
+  
+  public void setReplaces(String replaces) {
+    this.replaces = replaces;
   }
 
   public void setFilename(String filename) {

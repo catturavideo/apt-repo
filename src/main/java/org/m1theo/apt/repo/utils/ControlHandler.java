@@ -85,6 +85,18 @@ public class ControlHandler {
       packageEntry.setDepends(controlEntries.get("Depends").toString());
     }
     
+    if (controlEntries.containsKey("Recommends")) {
+      packageEntry.setRecommends(controlEntries.get("Recommends").toString());
+    }
+    
+    if (controlEntries.containsKey("Conflicts")) {
+      packageEntry.setConflicts(controlEntries.get("Conflicts").toString());
+    }
+    
+    if (controlEntries.containsKey("Replaces")) {
+      packageEntry.setReplaces(controlEntries.get("Replaces").toString());
+    }
+    
     if (controlEntries.containsKey("Section")) {
       packageEntry.setSection(controlEntries.get("Section").toString());
     }
