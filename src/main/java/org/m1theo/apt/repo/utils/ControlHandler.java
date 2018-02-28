@@ -8,6 +8,8 @@
 
 package org.m1theo.apt.repo.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.m1theo.apt.repo.packages.PackageEntry;
 
@@ -38,34 +40,61 @@ public class ControlHandler {
     if (controlContent == null) {
       throw new MojoExecutionException("no controlContent to parse");
     }
+    
+    final Map<String, StringBuilder> controlEntries = new HashMap<String, StringBuilder>();
+    String key = null;
+    
     String[] lines = controlContent.split("\\r?\\n");
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
+      System.err.println(line);
+      if (line.startsWith(" ") && key != null) {
+        controlEntries.get(key).append("\n").append(line);
+        continue;
+      }
+      
       String[] stmt = line.split(":", 2);
       if (stmt.length != 2) {
         continue;
       }
-      String key = stmt[0].trim();
-      String value = stmt[1].trim();
-      if (key.equals("Package")) {
-        packageEntry.setPackageName(value);
-      } else if (key.equals("Version")) {
-        packageEntry.setVersion(value);
-      } else if (key.equals("Architecture")) {
-        packageEntry.setArchitecture(value);
-      } else if (key.equals("Maintainer")) {
-        packageEntry.setMaintainer(value);
-      } else if (key.equals("Installed-Size")) {
-        packageEntry.setInstalled_size(value);
-      } else if (key.equals("Depends")) {
-        packageEntry.setDepends(value);
-      } else if (key.equals("Section")) {
-        packageEntry.setSection(value);
-      } else if (key.equals("Priority")) {
-        packageEntry.setPriority(value);
-      } else if (key.equals("Description")) {
-        packageEntry.setDescription(value);
-      }
+      key = stmt[0].trim();
+      controlEntries.put(key, new StringBuilder(stmt[1].trim()));
+    }
+    
+    if (controlEntries.containsKey("Package")) {
+      packageEntry.setPackageName(controlEntries.get("Package").toString());        
+    }
+    
+    if (controlEntries.containsKey("Version")) {
+      packageEntry.setVersion(controlEntries.get("Version").toString());
+    }
+    
+    if (controlEntries.containsKey("Architecture")) {
+      packageEntry.setArchitecture(controlEntries.get("Architecture").toString());
+    }
+    
+    if (controlEntries.containsKey("Maintainer")) {
+      packageEntry.setMaintainer(controlEntries.get("Maintainer").toString());
+    }
+    
+    if (controlEntries.containsKey("Installed-Size")) {
+      packageEntry.setInstalled_size(controlEntries.get("Installed-Size").toString());
+    }
+    
+    if (controlEntries.containsKey("Depends")) {
+      packageEntry.setDepends(controlEntries.get("Depends").toString());
+    }
+    
+    if (controlEntries.containsKey("Section")) {
+      packageEntry.setSection(controlEntries.get("Section").toString());
+    }
+    
+    if (controlEntries.containsKey("Priority")) {
+      packageEntry.setPriority(controlEntries.get("Priority").toString());
+    }
+    
+    if (controlEntries.containsKey("Description")) {
+      packageEntry.setDescription(controlEntries.get("Description").toString());
     }
   }
 
