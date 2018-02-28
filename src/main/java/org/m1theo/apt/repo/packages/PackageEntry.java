@@ -45,8 +45,10 @@ public class PackageEntry {
   public String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Package: " + packageName + "\n" + "Version: " + version + "\n"
-        + "Architecture: " + architecture + "\n" + "Maintainer: " + maintainer + "\n"
-        + "Installed-Size: " + installed_size + "\n");
+        + "Architecture: " + architecture + "\n" + "Maintainer: " + maintainer + "\n");
+    if (installed_size != null) {
+      buffer.append("Installed-Size: " + installed_size + "\n");
+    }    
     if (depends != null) {
       buffer.append("Depends: " + depends + "\n");
     }
