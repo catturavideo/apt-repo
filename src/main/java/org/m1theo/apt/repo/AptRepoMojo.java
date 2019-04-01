@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 
 /**
  * Goal which creates an apt repository.
@@ -218,17 +219,24 @@ public class AptRepoMojo extends AbstractMojo {
       packageEntry.setFilename(fileName);
       getLog().info("found deb: " + fileName);
       try {
-        ArchiveInputStream control_tgz;
+        ArchiveInputStream control_tgz = null;
         ArArchiveEntry entry;
         TarArchiveEntry control_entry;
         ArchiveInputStream debStream =
             new ArchiveStreamFactory().createArchiveInputStream("ar", new FileInputStream(file));
         while ((entry = (ArArchiveEntry) debStream.getNextEntry()) != null) {
           if (entry.getName().equals("control.tar.gz")) {
-            ControlHandler controlHandler = new ControlHandler();
             GZIPInputStream gzipInputStream = new GZIPInputStream(debStream);
             control_tgz =
-                new ArchiveStreamFactory().createArchiveInputStream("tar", gzipInputStream);
+                  new ArchiveStreamFactory().createArchiveInputStream("tar", gzipInputStream);
+          } else if (entry.getName().equals("control.tar.xz")) {
+            XZCompressorInputStream xzInputStream = new XZCompressorInputStream(debStream);
+            control_tgz =
+                  new ArchiveStreamFactory().createArchiveInputStream("tar", xzInputStream);
+          }
+          
+          if (control_tgz != null) {
+            ControlHandler controlHandler = new ControlHandler();
             while ((control_entry = (TarArchiveEntry) control_tgz.getNextEntry()) != null) {
               getLog().debug("control entry: " + control_entry.getName());
               if (control_entry.getName().equals(CONTROL_FILE_NAME)) {
@@ -247,7 +255,7 @@ public class AptRepoMojo extends AbstractMojo {
             } else {
               throw new MojoExecutionException("no control content found for: " + file.getName());
             }
-            break;
+            break;              
           }
         }
         debStream.close();
