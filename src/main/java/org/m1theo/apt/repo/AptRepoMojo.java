@@ -24,20 +24,16 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
-import org.bouncycastle.bcpg.HashAlgorithmTags;
-import org.bouncycastle.openpgp.PGPException;
 import org.codehaus.plexus.util.FileUtils;
 import org.m1theo.apt.repo.packages.PackageEntry;
 import org.m1theo.apt.repo.packages.Packages;
 import org.m1theo.apt.repo.release.Release;
 import org.m1theo.apt.repo.release.ReleaseInfo;
-import org.m1theo.apt.repo.signing.PGPSigner;
 import org.m1theo.apt.repo.utils.ControlHandler;
 import org.m1theo.apt.repo.utils.DefaultHashes;
 import org.m1theo.apt.repo.utils.Utils;
 
 import java.io.*;
-import java.security.GeneralSecurityException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -308,17 +304,7 @@ public class AptRepoMojo extends AbstractMojo {
       final File releaseFile = new File(repoDir, RELEASE);
       FileUtils.fileWrite(releaseFile, release.toString());
       if (sign){
-        if (passphraseFile != null){
-          getLog().debug("passphrase file will be used " + passphraseFile.getAbsolutePath());
-          BufferedReader pwReader = new BufferedReader(new FileReader(passphraseFile));
-          passphrase = pwReader.readLine();
-          pwReader.close();
-        }
-        final File inReleaseFile = new File(repoDir, INRELEASE);
-        final File releaseGpgFile = new File(repoDir, RELEASEGPG);
-        PGPSigner signer = new PGPSigner(new FileInputStream(keyring), key, passphrase, getDigestCode(digest));
-        signer.clearSignDetached(release.toString(), new FileOutputStream(releaseGpgFile));
-        signer.clearSign(release.toString(), new FileOutputStream(inReleaseFile));
+        new SignAptRepoMojo(keyring, key, passphrase, passphraseFile, digest, repoDir).execute();;
       }
       // if (attach) {
       // getLog().info("Attaching created apt-repo files: " + releaseFile + ", " + packagesFile);
@@ -327,32 +313,6 @@ public class AptRepoMojo extends AbstractMojo {
       // }
     } catch (IOException e) {
       throw new MojoExecutionException("writing files failed", e);
-    } catch (PGPException e) {
-      throw new MojoExecutionException("gpg signing failed",e);
-    } catch (GeneralSecurityException e) {
-      throw new MojoExecutionException("generating release failed",e);
     }
   }
-  static int getDigestCode(String digestName) throws MojoExecutionException {
-    if ("SHA1".equals(digestName)) {
-      return HashAlgorithmTags.SHA1;
-    } else if ("MD2".equals(digestName)) {
-      return HashAlgorithmTags.MD2;
-    } else if ("MD5".equals(digestName)) {
-      return HashAlgorithmTags.MD5;
-    } else if ("RIPEMD160".equals(digestName)) {
-      return HashAlgorithmTags.RIPEMD160;
-    } else if ("SHA256".equals(digestName)) {
-      return HashAlgorithmTags.SHA256;
-    } else if ("SHA384".equals(digestName)) {
-      return HashAlgorithmTags.SHA384;
-    } else if ("SHA512".equals(digestName)) {
-      return HashAlgorithmTags.SHA512;
-    } else if ("SHA224".equals(digestName)) {
-      return HashAlgorithmTags.SHA224;
-    } else {
-      throw new MojoExecutionException("unknown hash algorithm tag in digestName: " + digestName);
-    }
-  }
-
 }
